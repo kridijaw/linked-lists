@@ -29,4 +29,4 @@
 #
 # to_s represent your LinkedList objects as strings,
 # so you can print them out and preview them in the console.
-# ( value ) -> ( value ) -> ( value ) -> nil
+# format: ( value ) -> ( value ) -> ( value ) -> nil
