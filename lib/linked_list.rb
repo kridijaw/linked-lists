@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# https://www.theodinproject.com/lessons/ruby-linked-lists
 # LinkedList class, which will represent the full list.
 # Node class, containing a #value method and a link to the #next_node,
 # set both as nil by default.
