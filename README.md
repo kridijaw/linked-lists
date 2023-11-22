@@ -7,8 +7,8 @@ Implementation of Ruby's missing data structure: [linked list](https://en.wikipe
 - [x] LinkedList#append(value)
 - [ ] LinkedList#prepend(value)
 - [ ] LinkedList#size
-- [ ] LinkedList#head
-- [ ] LinkedList#tail
+- [x] LinkedList#head
+- [x] LinkedList#tail
 - [ ] LinkedList#at(index)
 - [ ] LinkedList#pop
 - [ ] LinkedList#contains?(value)
