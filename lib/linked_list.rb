@@ -1,33 +1,77 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
+
+require_relative './node'
 
 # https://www.theodinproject.com/lessons/ruby-linked-lists
-# 
-# LinkedList class, which will represent the full list.
-# Node class, containing a #value method and a link to the #next_node,
-# set both as nil by default.
 
-# Build the following methods in your linked list class:
+#------------------------------------------------------------------------------#
+# Todo LinkedList Methods:
 
-# #append(value) adds a new node containing value to the end of the list
-#
-# #prepend(value) adds a new node containing value to the start of the list
-#
-# #size returns the total number of nodes in the list
-#
-# #head returns the first node in the list
-#
-# #tail returns the last node in the list
-#
 # #at(index) returns the node at the given index
-#
+
 # #pop removes the last element from the list
-#
+
 # #contains?(value) returns true if the passed in value is in the list
 # and otherwise returns false.
-#
+
 # #find(value) returns the index of the node containing value,
 # or nil if not found.
-#
-# to_s represent your LinkedList objects as strings,
+
+# #to_s represent your LinkedList objects as strings,
 # so you can print them out and preview them in the console.
 # format: ( value ) -> ( value ) -> ( value ) -> nil
+
+# extra:
+# #insert_at(value, index) that inserts a new node with
+# the provided value at the given index.
+# cave: update #next_node link for affected nodes
+
+# #remove_at(index) that removes the node at the given index.
+# cave: update #next_node link for affected nodes
+#------------------------------------------------------------------------------#
+
+# Linear collection of data elements (nodes) which
+# point to the next node by means of a pointer.
+# [ NODE(head) ] -> [ NODE ] -> [ NODE(tail) ] -> nil
+class LinkedList
+  attr_accessor :head_node
+
+  # Initialize with nil valued head node
+  def initialize
+    @head_node = Node.new
+  end
+
+  # Adds a new node containing value to the end of the list
+  def append(value)
+    tail_node = Node.new(value)
+    tail.next_node = tail_node
+  end
+
+  # Adds a new node containing value to the start of the list
+  def prepend(value)
+    nil
+  end
+
+  # Returns the total number of nodes in the list
+  def size
+    nil
+  end
+
+  # Returns the first node in the list
+  def head
+    @head_node
+  end
+
+  # Returns the last node in the list
+  def tail
+    selected_node = @head_node
+    selected_node = selected_node.next_node until selected_node.next_node.nil?
+    selected_node
+  end
+end
+
+list = LinkedList.new
+p list
+list.append('node1')
+list.append('node2')
+list.append('node3')
