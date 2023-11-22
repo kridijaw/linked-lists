@@ -2,7 +2,7 @@
 
 Created as part of The Odin Project curriculum.
 
-Implementation of Ruby's missing data structure: [linked list](https://en.wikipedia.org/wiki/Linked_list).
+Implementation of Ruby's missing data structure: [linked list](https://en.wikipedia.org/wiki/Linked_list)
 
 - [ ] LinkedList#append(value)
 - [ ] LinkedList#prepend(value)
