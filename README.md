@@ -5,8 +5,8 @@ Created as part of The Odin Project curriculum.
 Implementation of Ruby's missing data structure: [linked list](https://en.wikipedia.org/wiki/Linked_list)
 
 - [x] LinkedList#append(value)
-- [ ] LinkedList#prepend(value)
-- [ ] LinkedList#size
+- [x] LinkedList#prepend(value)
+- [x] LinkedList#size
 - [x] LinkedList#head
 - [x] LinkedList#tail
 - [ ] LinkedList#at(index)
