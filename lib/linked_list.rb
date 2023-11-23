@@ -43,26 +43,28 @@ class LinkedList
 
   # Adds a new node containing value to the end of the list
   def append(value)
-    @tail_node = Node.new(value)
     if @head_node.value.nil?
-      @head_node = @tail_node
+      @head_node = Node.new(value)
+      # @head_node = @tail_node
     else
-      tail.next_node = @tail_node
+      tail.next_node = Node.new(value)
     end
   end
 
   # Adds a new node containing value to the start of the list
   def prepend(value)
-    @head_node = if @head_node.value.nil?
-                   Node.new(value)
-                 else
-                   Node.new(value, head)
-                 end
+    @head_node = @head_node.value.nil? ? Node.new(value) : Node.new(value, head)
   end
 
   # Returns the total number of nodes in the list
   def size
-    nil
+    count = 1
+    selected_node = @head_node
+    until selected_node.next_node.nil?
+      selected_node = selected_node.next_node
+      count += 1
+    end
+    count
   end
 
   # Returns the first node in the list
@@ -79,11 +81,7 @@ class LinkedList
 end
 
 list = LinkedList.new
-list.prepend('node1')
-p list.head
-list.append('node2')
-p list.head
-list.prepend('node0')
-p list.head
-list.append('node3')
-p list.head
+list.prepend('node1') # 1
+list.append('node2') # 1 -> 2
+list.prepend('node0') # 0 -> 1 -> 2
+list.append('node3') # 0 -> 1 -> 2 -> 3
