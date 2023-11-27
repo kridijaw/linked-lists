@@ -14,5 +14,5 @@ Implementation of Ruby's missing data structure: [linked list](https://en.wikipe
 - [x] LinkedList#contains?(value)
 - [x] LinkedList#find(value)
 - [x] LinkedList#to_s
-- [ ] LinkedList#insert_at(value, index)
-- [ ] LinkedList##remove_at(index)
+- [x] LinkedList#insert_at(value, index)
+- [x] LinkedList##remove_at(index)
