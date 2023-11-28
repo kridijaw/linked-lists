@@ -1,21 +1,18 @@
 # frozen_string_literal: false
 
 require_relative './node'
+require_relative './display'
 
 # Linear collection of data elements (nodes) which
 # point to the next node by means of a pointer.
 # [ NODE(head) ] -> [ NODE ] -> [ NODE(tail) ] -> nil
 class LinkedList
+  include Display
   attr_accessor :head_node
-
-  # Returns a new LinkedList with a nil valued head node.
-  def initialize
-    @head_node = Node.new
-  end
 
   # Adds a new node with given value to the end of self.
   def append(value)
-    if @head_node.value.nil?
+    if list_empty?
       @head_node = Node.new(value)
     else
       tail.next_node = Node.new(value)
@@ -24,173 +21,147 @@ class LinkedList
 
   # Adds a new node with given value to the start of self.
   def prepend(value)
-    @head_node = @head_node.value.nil? ? Node.new(value) : Node.new(value, head)
+    @head_node = if list_empty?
+                   Node.new(value)
+                 else
+                   Node.new(value, head)
+                 end
   end
 
   # Returns the total number of nodes of self.
   def size
-    i = 0
-    return 0 if @head_node.value.nil?
-
-    selected_node = @head_node
-    while selected_node.is_a?(Node)
-      selected_node = selected_node.next_node
-      i += 1
-    end
-    i
-  end
-
-  # Returns the node of self at the given Integer index.
-  def at(index)
-    if (size - 1) < index
-      puts 'Error: Index out of list size'
-      return
-    end
-    i = 0
-    selected_node = @head_node
-
-    # while selected_node.is_a?(Node)
-    until selected_node.next_node.nil?
-      return selected_node if index == i
-
-      selected_node = selected_node.next_node
-      i += 1
-    end
-    selected_node
-  end
-
-  # Returns true if value is in self and otherwise returns false.
-  def contains?(value)
-    selected_node = @head_node
-    while selected_node.is_a?(Node)
-      return true if value == selected_node.value
-
-      selected_node = selected_node.next_node
-    end
-    false
-  end
-
-  # Returns the index of the node with given value of self or nil if not found.
-  def find(value)
-    i = 0
-    selected_node = @head_node
-    while selected_node.is_a?(Node)
-      return i if value == selected_node.value
-
-      selected_node = selected_node.next_node
-      i += 1
-    end
-  end
-
-  # Returns objects of self as strings in the format:
-  # ( value ) -> ( value ) -> ( value ) -> nil
-  def to_s
-    i = 0
-    selected_node = @head_node
-    output = "( #{selected_node.value} )"
-    while selected_node.next_node.is_a?(Node)
-      selected_node = selected_node.next_node
-      output = "#{output} -> ( #{selected_node.value} )"
-      i += 1
-    end
-    "#{output} -> nil"
-  end
-
-  # Inserts node with given value and given Integer index.
-  def insert_at(value, index)
-    if index == (size + 1)
-      append(value)
-    elsif index == 0
-      prepend(value)
-    else
-
-      selected_note = at(index - 1)
-      begin
-        temp = selected_note.next_node
-      rescue StandardError
-        puts 'Error: Index bigger than (size of list + 1)'
-        return
-      end
-
-      new_node = Node.new(value)
-      selected_note.next_node = new_node
-      new_node.next_node = temp
-    end
-  end
-
-  # Removes node from self at given Integer index.
-  def remove_at(index)
-    if size.zero?
-      puts 'Error: List is empty'
-      return
-    end
-
-    if size == 1 && index == 1
-      pop
-      return
-    end
-
-    if index.zero?
-      @head_node = @head_node.next_node
-    else
-
-      selected_note = at(index - 1)
-      begin
-        selected_note.next_node = selected_note.next_node.next_node
-      rescue StandardError
-        puts 'Error: Node is not in the list.'
-      end
-    end
-  end
-
-  # Removes the last element from self.
-  def pop
-    if @head_node.value.nil?
-      puts 'Error: List is empty'
-      return
-    end
-
-    selected_node = @head_node
-    until selected_node.next_node.nil?
-      prev_node = selected_node
-      selected_node = selected_node.next_node
-    end
-
-    selected_node.value = nil
-    selected_node.next_node = nil
-
-    selected_node == @head_node ? return : prev_node.next_node = nil
+    traverse('last', 'i')
   end
 
   # Returns the first node of self.
   def head
+    return error_empty_list if list_empty?
+
     @head_node
   end
 
   # Returns the last node of self.
   def tail
+    traverse('next_to_last', 'selected_node')
+  end
+
+  # Returns the node of self at the given Integer index.
+  def at(index)
+    return error_index_out_of_range unless index_in_range?(index)
+
+    traverse('next_to_last', 'selected_node', index)
+  end
+
+  # Removes the last element from self.
+  def pop
+    selected_nodes = # [0,1] = previous node, selected node
+      Array.new(traverse('next_to_last', 'previous_node'))
+
+    if selected_nodes[1] == @head_node
+      remove_instance_variable(:@head_node)
+    else
+      selected_nodes[0].next_node = nil
+    end
+  end
+
+  # Returns true if value is in self and otherwise returns false.
+  def contains?(value)
+    result = traverse('last', '', '', value)
+    result&.positive? ? true : false
+  end
+
+  # Returns the index of the node with given value of self.
+  def find(value)
+    index = traverse('last', '', '', value)
+    return index if index&.positive?
+
+    error_node_not_in_list
+  end
+
+  # Returns objects of self as strings in the format:
+  # ( value ) -> ( value ) -> ( value ) -> nil
+  def to_s
+    return error_empty_list if list_empty?
+
+    traverse('last', 'strings')
+  end
+
+  # Inserts node with given value at given Integer index.
+  def insert_at(value, index)
+    return error_index_out_of_range unless index_in_range?(index, 1)
+
+    selected_nodes = # [0,1] = previous node, selected node
+      Array.new(traverse('index_found', 'previous_node', index))
+
+    prepend(value) && return if selected_nodes[1] == @head_node
+
+    selected_nodes[0].next_node = nil
+    tmp = Node.new(value, selected_nodes[1])
+    selected_nodes[0].next_node = tmp
+  end
+
+  # Removes node from self at given Integer index.
+  def remove_at(index)
+    error_index_out_of_range unless index_in_range?(index)
+
+    selected_nodes = # [0,1] = previous node, selected node
+      Array.new(traverse('index_found', 'previous_node', index))
+
+    if selected_nodes[1] == @head_node
+      @head_node = head_node.next_node
+      return
+    end
+
+    selected_nodes[0].next_node = selected_nodes[1].next_node
+  end
+
+  # Returns true if self has no objects and false otherwise.
+  def list_empty?
+    !instance_variable_defined?(:@head_node)
+  end
+
+  # Returns true if index of self is within its size.
+  def index_in_range?(index, offset = 0)
+    (index < (size + offset)) && index >= 0
+  end
+
+  # Returns a method finish the traverse of self.
+  def traverse_until(last_node)
+    case last_node
+    when 'last'           # stop at tail
+      method = 'selected_node.is_a?(Node) == true'
+    when 'next_to_last'   # stop next to tail
+      method = 'selected_node.next_node.nil? == false'
+    when 'index_found'    # stop after index is found
+      method = 'index != i'
+    end
+    method
+  end
+
+  # Starts with head and access each node until value == nil.
+  def traverse(last_node, var_to_return, index = -1, value = nil)
+    return error_empty_list if list_empty?
+
+    method = traverse_until(last_node)
+
+    i = 0
     selected_node = @head_node
-    selected_node = selected_node.next_node until selected_node.next_node.nil?
-    selected_node
+    strings = "( #{@head_node.value} )"
+
+    while instance_eval(method)
+      return selected_node if index == i
+      return i if value == selected_node.value
+
+      previous_node = selected_node
+      selected_node = selected_node.next_node
+      strings = "#{strings} -> ( #{selected_node&.value} )" if selected_node&.value
+      i += 1
+    end
+
+    case var_to_return
+    when 'strings' then "#{strings} -> nil"
+    when 'previous_node' then [previous_node, selected_node]
+    when var_to_return then instance_eval(var_to_return)
+    end
   end
 end
-
-list = LinkedList.new
-list.prepend('node1') # 1
-# list.append('node2') # 1 -> 2
-# list.prepend('node0') # 0 -> 1 -> 2
-# list.append('node3')  # 0 -> 1 -> 2 -> 3 
-p list
-puts '<---------------->'
-list.remove_at(0)
-p list
-# p list.tail
-# p list.tail.instance_variables
-# p list.tail
-# list.remove_instance_variable
-
-# to do
-# list.remove_at(0) if list has 1 element
-# list.remove_at(1) if list has 1 element
-# list.remove_at(1+) if list has 1 element
-# list.remove_at(x+2) if list has x elements => find out how to return error
