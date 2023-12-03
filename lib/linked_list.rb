@@ -189,7 +189,7 @@ class LinkedList
     method
   end
 
-  # Starts with head and access each node until value == nil.
+  # Starts with head and access each node until last_node.
   #
   # @param last_node [String] the last node to stop at
   # @param var_to_return [String] the variable to return
