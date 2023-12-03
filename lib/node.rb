@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Holds a single element of data and
-# pointer to the next node in the list.
+# pointer to the next node in a list.
 #
 # @attr_accessor value [Object] the value of the node
 # @attr_accessor next_node [Node] the next node in the list
