@@ -27,12 +27,14 @@ GEM
       parser (>= 3.2.1.0)
     ruby-progressbar (1.13.0)
     unicode-display_width (2.5.0)
+    yard (0.9.34)
 
 PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
   rubocop (~> 1.57)
+  yard (~> 0.9.34)
 
 RUBY VERSION
    ruby 3.2.2p53
