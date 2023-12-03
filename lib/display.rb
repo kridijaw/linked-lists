@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Error messages
+# abort & output error messages
 module Display
   def error_empty_list
     abort 'Error: Empty list'
