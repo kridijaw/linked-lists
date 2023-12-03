@@ -29,17 +29,17 @@ puts list.at(0) == list.head
 # => true
 puts list.at(3) == list.tail
 # => true
-# puts "nodeX was found at index #{list.find('nodeX')}"
-# # => nodeX was found at index 1
-# puts "'node3' in list? => #{list.contains?('node3')}"
-# # => 'node3' in list? => true
-# puts list
-# # => ( node0 ) -> ( nodeX ) -> ( node2 ) -> ( node3 ) -> nil
-# list.pop
-# puts list
-# # => ( node0 ) -> ( nodeX ) -> ( node2 ) -> nil
-# puts "'node3' in list? => #{list.contains?('node3')}"
-# # => false
+puts "nodeX was found at index #{list.find('nodeX')}"
+# => nodeX was found at index 1
+puts "'node3' in list? => #{list.contains?('node3')}"
+# => 'node3' in list? => true
+puts list
+# => ( node0 ) -> ( nodeX ) -> ( node2 ) -> ( node3 ) -> nil
+list.pop
+puts list
+# => ( node0 ) -> ( nodeX ) -> ( node2 ) -> nil
+puts "'node3' in list? => #{list.contains?('node3')}"
+# => false
 
 # Test2 - Error messages: Empty list
 # list2 = LinkedList.new
