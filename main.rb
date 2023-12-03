@@ -41,7 +41,8 @@ puts list
 puts "'node3' in list? => #{list.contains?('node3')}"
 # => false
 
-# Test2 - Error messages: Empty list
+# Test2 - Scary Path
+# Provoke Error messages: Empty list
 # list2 = LinkedList.new
 # list2.size                # => Error: Empty list
 # list2.head                # => Error: Empty list
@@ -53,14 +54,16 @@ puts "'node3' in list? => #{list.contains?('node3')}"
 # list2.remove_at(0)        # => Error: Empty list
 # list2.insert_at('ABC', 0) # => Error: Empty list
 
-# Test3 - Error messages: Index out of range
+# Test3 - Scary Path
+# Provoke Error messages: Index out of range
 # list3 = LinkedList.new
 # list3.prepend('A')
 # list3.at(1)               # => Error: Index out of range
 # list3.insert_at('B', 2)   # => Error: Index out of range
 # list3.remove_at(1)        # => Error: Index out of range
 
-# Test4 - Error messages: Node not in list
+# Test4 - Scary Path
+# Provoke Error messages: Node not in list
 # list4 = LinkedList.new
 # list4.prepend('Alpha')
 # list4.find('Beta')        # => Error: Node not in list
